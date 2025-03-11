@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Excel JSON Converter</title>
+    <style>
+        body { font-family: Arial; }
+        form { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+<h1>Excel JSON Converter</h1>
+
+<h2>Upload Excel to get JSON:</h2>
+<form action="/excel-to-json" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".xlsx" required>
+    <button type="submit">Convert to JSON</button>
+</form>
+
+<div id="jsonResponse"></div>
+
+<h2>Upload JSON to get Excel:</h2>
+<form action="/json-to-excel" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".json" required>
+    <button type="submit">Convert to Excel</button>
+</form>
+
+<script>
+    const jsonForm = document.querySelector('form[action="/excel-to-json"]');
+    jsonForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(jsonForm);
+        try {
+            const response = await fetch(jsonForm.action, { method: 'POST', body: formData });
+            const jsonResponse = await response.text();
+            document.getElementById('jsonResponse').innerHTML = `<pre>${jsonResponse}</pre>`;
+        } catch (error) {
+            console.error(error);
+        }
+    });
+</script>
+</body>
+</html>
